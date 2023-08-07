@@ -1,5 +1,18 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+
+## Фичи
+
+С зажатым alt двигать столбцы через лкм(при перемещении графика они становятся на дефолтные позиции т.к. не видел перед собой задачи их запоминать)
+Без alt через лкм двигать график.
+Через колесико зумить анзумить. 
+
+## P.S.
+Старался не использовать никакие готовые решения и либы с графиками ведь задача сделать самому. Так что могут быть баги)) 
+
+
+
+
 ## Getting Started
 
 First, run the development server:

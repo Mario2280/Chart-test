@@ -37,7 +37,6 @@ const app = new PIXI.Application<HTMLCanvasElement>({
   width: 1920,
   height:  1080,
   backgroundColor: 0xffffff,
-  forceCanvas: true
 });
 app.stage.sortableChildren = true;
 const MAX_ZOOM = 2;
