@@ -1,95 +1,124 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
 
-export default function Home() {
+import { WheelEvent, useEffect, useState, MouseEvent, useRef } from "react";
+import * as PIXI from 'pixi.js';
+import Rectangle from './rectangle';
+import Head from 'next/head';
+import ZoomableTimeline from './timeline';
+
+interface Candle {
+  open: number;
+  close: number;
+  high: number;
+  low: number;
+}
+
+
+function generateRandomColumn(count: number) {
+  const data: Array<Candle> = [];
+  let prevClose = 50;
+
+  for (let i = 0; i < count; i++) {
+    const open = prevClose;
+    const close = open + (Math.random() - 0.5) * 2;
+    const high = Math.max(open, close) + Math.random() * 2;
+    const low = Math.min(open, close) - Math.random() * 2;
+
+    data.push({ open, close, high, low });
+    prevClose = close;
+  }
+  
+  return data;
+}
+
+
+const data = generateRandomColumn(30);
+const app = new PIXI.Application<HTMLCanvasElement>({
+  width: 1920,
+  height:  1080,
+  backgroundColor: 0xffffff,
+  forceCanvas: true
+});
+app.stage.sortableChildren = true;
+const MAX_ZOOM = 2;
+const MIN_ZOOM = 0.5;
+const STEP_ZOOM = 0.1;
+export default function Chart() {
+  
+  const CANVAS_WIDTH = 1920;
+  const CANVAS_HEIGHT =  1080;
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panX, setPanX] = useState(0);
+
+  const canvasRef = useRef<HTMLDivElement>(null);
+  
+  
+  useEffect(() => {
+    if(canvasRef.current){
+      canvasRef.current.appendChild(app.view);
+    }
+  }, [canvasRef])
+
+  
+  useEffect(() => {
+    app.stage.removeChildren();
+    drawCandlestickChart();
+  },
+  [zoomLevel, panX]);
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+    <>
+      <Head>
+        <title>Chart</title>
+        <meta
+          name="viewport"
+          content="initial-scale=1.0, width=device-width"
         />
-      </div>
+      </Head>
+        <div ref={canvasRef} onMouseMove={handleMouseMove} onWheel={handleWheelMove}>
+          <ZoomableTimeline zoomLevel={zoomLevel} panX={panX}/>
+        </div>
+       
+    </>
+  );
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+function handleMouseMove(event: MouseEvent) {
+    if(event.altKey) return;
+    if (event.buttons === 1) {
+      setPanX((prevPan) => prevPan + event.movementX > 0 ? prevPan : prevPan + event.movementX);
+    }
+  }
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
+  function handleWheelMove(event: WheelEvent) {
+    if(event.altKey) return;
+    if(event.deltaY < 0) {
+      setZoomLevel((prevZoom) => Math.min(prevZoom + STEP_ZOOM, MAX_ZOOM));
+    } else {
+      setZoomLevel((prevZoom) => Math.max(prevZoom - STEP_ZOOM, MIN_ZOOM));
+    }
+    
+  }
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+  function drawCandlestickChart() {
+    if(!app) return;
+    const minValue = Math.min(...data.map((item) => item.low));
+    const maxValue = Math.max(...data.map((item) => item.high));
+    const valueRange = maxValue - minValue;
+
+    const candleCount = data.length;
+    const candleWidth = CANVAS_WIDTH / candleCount;
+    const candleSpacing = candleWidth * 0.2;
+    
+    data.forEach((item, index) => {
+      const x = index * (candleWidth + candleSpacing) * zoomLevel + panX;
+      const candleHeight =
+        ((item.high - item.low) / valueRange) * CANVAS_HEIGHT * zoomLevel;
+      const candleOffset =
+        ((item.open - minValue) / valueRange) * CANVAS_HEIGHT * zoomLevel;
+      new Rectangle({ x, y: CANVAS_HEIGHT - candleOffset, width: candleWidth * zoomLevel, height: candleHeight, color: (item.close >= item.open ? "green" : "red"), app });
+    });
+
+  }
+
+
 }
