@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useRef } from "react";
-const WIDTH = 1920;
+const WIDTH = 3440;
 const HEIGHT = 25;
 
 const ZoomableTimeline = (props : {zoomLevel: number, panX: number}) =>  {
