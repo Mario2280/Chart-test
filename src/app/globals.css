@@ -1,3 +1,9 @@
 :root {
   overflow: hidden;
 }
+
+.btn {
+  width: 200px;
+  height: 100px;
+  font-size: 80px;
+}
