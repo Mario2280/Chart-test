@@ -45,6 +45,7 @@ const chartCont = new PIXI.Container()
 
 app.stage.sortableChildren = true
 let initialDistance = 0
+let qwe = 0
 let initTouchPros: {x: number, y: number} = {x: 0, y: 0};
 export default function Chart() {
 
@@ -135,8 +136,15 @@ export default function Chart() {
 			initialDistance = currentDistance
 		}
 		if (e.touches.length === 1) {
-			setPanX((prevPan) => prevPan + (initTouchPros.x - e.touches[0].clientX > 0 ? -2 : 2))
-			setPanY((prevPan) => prevPan + (initTouchPros.y - e.touches[0].clientY > 0 ? 2 : -2))
+
+			//const out = new PIXI.Text((initTouchPros.x - e.touches[0].clientX).toString());
+			//out.position.set(0, qwe)
+			//qwe +=50
+			//app.stage.addChild(out)
+
+
+			setPanX((prevPan) => prevPan + (initTouchPros.x - e.touches[0].clientX > 0 ? -4 : 4))
+			setPanY((prevPan) => prevPan + (initTouchPros.y - e.touches[0].clientY > 0 ? 4 : -4))
 		}
 	}
 
