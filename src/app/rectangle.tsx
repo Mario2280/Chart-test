@@ -17,6 +17,9 @@ interface Draggable extends PIXI.DisplayObject {
   dragging: boolean;
 }
 
+
+
+
 export default class Rectangle extends PIXI.Graphics {
   
   constructor(private props: RectangleProps, public data = null, public dragging = false, public key = uuid()){
