@@ -135,8 +135,8 @@ export default function Chart() {
 			initialDistance = currentDistance
 		}
 		if (e.touches.length === 1) {
-			setPanX((prevPan) => prevPan + (initTouchPros.x - e.touches[0].clientX > 0 ? -25 : 25))
-			setPanY((prevPan) => prevPan + (initTouchPros.y - e.touches[0].clientY > 0 ? 25 : -25))
+			setPanX((prevPan) => prevPan + (initTouchPros.x - e.touches[0].clientX > 0 ? -2 : 2))
+			setPanY((prevPan) => prevPan + (initTouchPros.y - e.touches[0].clientY > 0 ? 2 : -2))
 		}
 	}
 
