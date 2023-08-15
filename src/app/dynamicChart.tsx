@@ -91,11 +91,19 @@ export default function Chart() {
 
 			<div
 				ref={canvasRef}
-				onPointerMove={handlePointeMove}
-				onPointerDown={handlePointeDown}
-				onPointerUp={handlePointeUp}></div>
+				//onPointerMove={handlePointeMove}
+				//onPointerDown={handlePointeDown}
+				//onPointerUp={handlePointeUp}
+				>
+					
+				</div>
 			<button className='btn' onClick={handleZoomIn}>+</button>
 			<button className='btn' onClick={handleZoomOut}>-</button>
+			<button className='btn' onClick={() => setPanX((prevPan) => prevPan + 50 * zoomLevel)}>👈</button>
+			<button className='btn' onClick={() => setPanX((prevPan) => prevPan - 50 * zoomLevel)}>👉</button>
+			<button className='btn' onClick={() => setPanY((prevPan) => prevPan + 50 * zoomLevel)}>👇</button>
+			<button className='btn' onClick={() => setPanY((prevPan) => prevPan - 50 * zoomLevel)}>☝️</button>
+
 		</>
 	)
 
