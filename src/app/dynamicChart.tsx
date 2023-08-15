@@ -29,7 +29,7 @@ function generateRandomColumn(count: number) {
 	return data
 }
 
-const data = generateRandomColumn(100)
+const data = generateRandomColumn(50)
 
 const app = new PIXI.Application<HTMLCanvasElement>({
 	width: window.innerWidth,
