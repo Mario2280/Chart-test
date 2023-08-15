@@ -99,10 +99,10 @@ export default function Chart() {
 				</div>
 			<button className='btn' onClick={handleZoomIn}>+</button>
 			<button className='btn' onClick={handleZoomOut}>-</button>
-			<button className='btn' onClick={() => setPanX((prevPan) => prevPan + 50 * zoomLevel)}>👈</button>
-			<button className='btn' onClick={() => setPanX((prevPan) => prevPan - 50 * zoomLevel)}>👉</button>
-			<button className='btn' onClick={() => setPanY((prevPan) => prevPan + 50 * zoomLevel)}>👇</button>
-			<button className='btn' onClick={() => setPanY((prevPan) => prevPan - 50 * zoomLevel)}>☝️</button>
+			<button className='btn' onClick={() => setPanX((prevPan) => prevPan + 100 * zoomLevel)}>👈</button>
+			<button className='btn' onClick={() => setPanX((prevPan) => prevPan - 100 * zoomLevel)}>👉</button>
+			<button className='btn' onClick={() => setPanY((prevPan) => prevPan + 100 * zoomLevel)}>👇</button>
+			<button className='btn' onClick={() => setPanY((prevPan) => prevPan - 100 * zoomLevel)}>☝️</button>
 
 		</>
 	)
